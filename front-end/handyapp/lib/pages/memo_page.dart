@@ -97,7 +97,12 @@ class _MemoPageState extends State<MemoPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        leading: const SizedBox.shrink(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.toNamed('/memo_page'); // Navigate back to memo page
+          },
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -121,8 +126,31 @@ class _MemoPageState extends State<MemoPage> {
           ),
         ],
         title: Center(
-          child:
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               Text(Get.find<dependencies.AuthController>().signedInEmail.value),
+              const SizedBox(width: 20),
+              IconButton(
+                icon: const Icon(Icons.attach_money),
+                onPressed: () {
+                  Get.toNamed('/finances_page'); // Navigate to finances page
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.build), // Hammer icon for materials page
+                onPressed: () {
+                  Get.toNamed('/materials_page'); // Navigate to materials page
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.people),
+                onPressed: () {
+                  Get.toNamed('/labor_page'); // Navigate to labor page
+                },
+              ),
+            ],
+          ),
         ),
       ),
       body: Stack(
