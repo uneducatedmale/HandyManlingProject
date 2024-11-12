@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Memo App',
+      title: 'Handyman App',
       theme: customTheme,
       debugShowCheckedModeBanner: false,
       initialBinding: dependencies.InitialBindings(),
