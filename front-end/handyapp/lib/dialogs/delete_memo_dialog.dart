@@ -2,30 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
-class DeleteMemoDialog extends StatefulWidget {
+class DeleteProjectDialog extends StatefulWidget {
   final int index;
   final Function scrollToBottom;
-  const DeleteMemoDialog({
+  const DeleteProjectDialog({
     required this.index,
     required this.scrollToBottom,
     super.key,
   });
 
   @override
-  State<DeleteMemoDialog> createState() => _DeleteMemoDialogState();
+  State<DeleteProjectDialog> createState() => _DeleteProjectDialogState();
 }
 
-class _DeleteMemoDialogState extends State<DeleteMemoDialog> {
-  RxString status = 'delete-memo'.obs;
-  var memoController = TextEditingController();
+class _DeleteProjectDialogState extends State<DeleteProjectDialog> {
+  RxString status = 'delete-project'.obs;
 
-  Widget deleteMemoWidget() {
+  Widget deleteProjectWidget() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            'Delete this memo?',
+            'Delete this project?',
           ),
           const SizedBox(height: 20),
           Row(
@@ -34,7 +33,7 @@ class _DeleteMemoDialogState extends State<DeleteMemoDialog> {
               ElevatedButton(
                 child: const Text('Delete'),
                 onPressed: () {
-                  status.value = 'deleting-memo';
+                  status.value = 'deleting-project';
                 },
               ),
               const SizedBox(width: 20),
@@ -51,9 +50,9 @@ class _DeleteMemoDialogState extends State<DeleteMemoDialog> {
     );
   }
 
-  Widget deletingMemoWidget() {
+  Widget deletingProjectWidget() {
     return FutureBuilder(
-      future: Get.find<dependencies.AuthController>().deleteMemo(
+      future: Get.find<dependencies.AuthController>().deleteProject(
         widget.index,
       ),
       builder: (context, snapshot) {
@@ -62,7 +61,7 @@ class _DeleteMemoDialogState extends State<DeleteMemoDialog> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Deleting memo'),
+                Text('Deleting project'),
                 SizedBox(height: 20),
                 CircularProgressIndicator(),
               ],
@@ -72,7 +71,7 @@ class _DeleteMemoDialogState extends State<DeleteMemoDialog> {
           Future.delayed(
             const Duration(seconds: 1),
             () {
-              if (Get.find<dependencies.AuthController>().memos.isNotEmpty) {
+              if (Get.find<dependencies.AuthController>().projects.isNotEmpty) {
                 widget.scrollToBottom();
               }
               Navigator.pop(context);
@@ -82,7 +81,7 @@ class _DeleteMemoDialogState extends State<DeleteMemoDialog> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Memo deleted successfully'),
+                Text('Project deleted successfully'),
                 SizedBox(height: 20),
                 CircularProgressIndicator(),
               ],
@@ -113,10 +112,10 @@ class _DeleteMemoDialogState extends State<DeleteMemoDialog> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
-        () => status.value == 'delete-memo'
-            ? deleteMemoWidget()
-            : status.value == 'deleting-memo'
-                ? deletingMemoWidget()
+        () => status.value == 'delete-project'
+            ? deleteProjectWidget()
+            : status.value == 'deleting-project'
+                ? deletingProjectWidget()
                 : const SizedBox(),
       ),
     );
