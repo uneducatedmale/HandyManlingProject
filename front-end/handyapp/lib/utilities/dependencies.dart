@@ -3,6 +3,45 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'base_url.dart';
 
+/*
+  File: dependencies.dart
+  Purpose:
+  - Serves as the central controller for managing user authentication, project data, and backend API interactions.
+  - Handles state management for the app using `GetX`.
+
+  Features:
+  - User Authentication:
+    - Account creation, sign-in, and sign-out functionality.
+  - Project Management:
+    - Adding, editing, and deleting projects and their associated memos.
+  - Material Management:
+    - Adding, editing, and deleting materials associated with specific projects.
+  - Laborer Management:
+    - Adding, editing, and deleting laborers linked to projects.
+  - Payment Updates:
+    - Updating the payment details for projects.
+
+  How It Works:
+  - `AuthController`: Provides reactive state management for user authentication and project data.
+  - API Integration:
+    - Connects to backend endpoints defined in `base_url.dart` for seamless CRUD operations.
+  - State Management:
+    - Utilizes `Rx` variables in `GetX` for live updates to the UI when data changes.
+
+  Files It Interacts With:
+  - **`base_url.dart`**: Provides the base API URL for all endpoints.
+  - Backend Endpoints:
+    - `/api/users/create-account`: For creating new accounts.
+    - `/api/users/sign-in`: For user authentication.
+    - `/api/users/add-project`, `/api/users/edit-memo`, `/api/users/delete-project`: For project management.
+    - `/api/users/add-material`, `/api/users/edit-material`, `/api/users/delete-material`: For material management.
+    - `/api/users/add-laborer`, `/api/users/edit-laborer`, `/api/users/delete-laborer`: For laborer management.
+    - `/api/users/update-pay`: For updating project payment details.
+
+  Notes:
+  - This file is critical for all backend interactions and state updates in the app.
+  - Ensure backend APIs are functional and return appropriate responses to maintain app stability.
+*/
 class AuthController extends GetxController {
   final createAccountUrl = Uri.parse('$baseUrl/api/users/create-account');
   final signInUrl = Uri.parse('$baseUrl/api/users/sign-in');

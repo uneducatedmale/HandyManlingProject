@@ -2,6 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: add_material_dialog.dart
+  Purpose:
+  - Provides a user interface for adding a new material to a specific project.
+  - Collects and validates input data for the material (name, quantity, and value per unit).
+
+  How It Works:
+  - Displays an `AlertDialog` with input fields for material details.
+  - Validates the input:
+    - Name must not be empty.
+    - Quantity and value must be positive numbers.
+  - Sends the input data to the `AuthController` via the `addMaterial` method.
+  - Provides user feedback:
+    - Shows a snackbar for errors or success.
+    - Closes the dialog upon successful addition.
+
+  Features:
+  - Integration with the backend through the `AuthController`.
+  - Real-time input validation to ensure accuracy.
+  - Automatic updates to the materials list on success.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Accesses the `AuthController` for API communication.
+  - **`materials_page.dart`**: Updates the materials list dynamically after a material is added.
+
+  Notes:
+  - Designed for use in material management functionality.
+  - Ensure proper API setup for material addition.
+*/
+
 class AddMaterialDialog extends StatefulWidget {
   final String projectId;
   final String projectName;

@@ -2,6 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: edit_memo_dialog.dart
+  Purpose:
+  - Provides a dialog for editing the memo and name of a project in the Handyman app.
+  - Allows users to update project details such as the project name and memo.
+
+  How It Works:
+  - Pre-populates the input fields with the current project name and memo using `TextEditingController`.
+  - Validates input fields to ensure they are not empty.
+  - On save, sends the updated data to the backend via the `editProjectMemo` method in `AuthController`.
+  - Displays feedback to the user, indicating success or failure of the operation.
+
+  Features:
+  - User-friendly design with input validation for both fields.
+  - Provides a clear separation of project name and memo for better organization.
+  - Notifies the user of the operation's status through snackbar messages.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Utilizes `AuthController` for API requests to update project details.
+  - **Backend API**: Sends updated project details to the backend.
+  - **`memo_page.dart`**: Calls this dialog to edit project details and reflects changes in the UI.
+
+  Notes:
+  - Ensure backend validation for memo and project name to avoid unexpected errors.
+  - Feedback messages should be user-friendly and actionable.
+*/
+
 class EditMemoDialog extends StatefulWidget {
   final int index; // The index of the project to edit
   final String currentMemo; // Current memo of the project

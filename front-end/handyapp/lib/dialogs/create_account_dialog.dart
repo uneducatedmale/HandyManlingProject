@@ -2,6 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: create_account_dialog.dart
+  Purpose:
+  - Handles the creation of new user accounts for the Handyman app.
+  - Provides a user interface for entering personal details and creating an account.
+  
+  How It Works:
+  - Displays a form with input fields for first name, last name, email, and password.
+  - Validates user input to ensure all fields are filled.
+  - Sends account creation details to the backend via the `AuthController`'s `createAccount` method.
+  - Displays feedback on the success or failure of the account creation process.
+
+  Features:
+  - Real-time feedback for incomplete form submissions.
+  - Dynamic UI updates using `Obx` to switch between the form and the account creation process.
+  - Success or error messages displayed to inform the user about the status of their request.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Uses `AuthController` for backend communication.
+  - **`sign_in_dialog.dart`**: Complements the sign-in dialog by enabling account creation.
+  - **Backend API**: Sends account creation requests and handles responses.
+
+  Notes:
+  - Ensure backend API endpoints for account creation are functioning correctly.
+  - Proper validation of the email and password format may be added for enhanced security.
+*/
+
 class CreateAccountDialog extends StatefulWidget {
   const CreateAccountDialog({super.key});
 
@@ -30,7 +57,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog> {
           ),
         ),
         const SizedBox(height: 50),
-        const Text('Create Memo Account'),
+        const Text('Create Handyman Account'),
         const SizedBox(height: 30),
         SizedBox(
           width: 300,

@@ -2,6 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: sign_in_dialog.dart
+  Purpose:
+  - Provides a user interface for signing in to the Handyman app.
+  - Handles user credential input and sends authentication requests to the backend.
+
+  How It Works:
+  - Presents a form with fields for email and password.
+  - Validates that both fields are filled before attempting to sign in.
+  - Uses `AuthController` from `dependencies.dart` to perform the sign-in process.
+  - Displays a loading indicator during the sign-in attempt and handles success or failure responses.
+
+  Features:
+  - Redirects users to the Memo page (`/memo_page`) upon successful sign-in.
+  - Shows error messages in case of failed authentication or missing credentials.
+  - Provides a "Try Again" button on failure for reattempting sign-in.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Utilizes `AuthController` to manage authentication and API interactions.
+  - **Backend API**: Sends user credentials to the server for authentication.
+  - **`routes.dart`**: Redirects to the Memo page upon successful sign-in.
+
+  Notes:
+  - Ensure robust validation for email and password fields on both the frontend and backend.
+  - Feedback messages should clearly communicate the reason for any errors.
+*/
+
 class SignInDialog extends StatefulWidget {
   const SignInDialog({super.key});
 

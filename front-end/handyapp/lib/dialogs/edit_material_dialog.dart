@@ -2,6 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: edit_material_dialog.dart
+  Purpose:
+  - Provides a dialog for editing material details associated with a specific project in the Handyman app.
+  - Allows users to modify material name, quantity, and value per unit.
+
+  How It Works:
+  - Pre-populates the fields with the current material details using `TextEditingController`.
+  - Validates input for material name, quantity (integer), and value (decimal).
+  - On save, sends the updated data to the backend via the `editMaterial` method in `AuthController`.
+  - Displays success or error notifications based on the operation result.
+
+  Features:
+  - User-friendly interface with pre-filled fields.
+  - Input validation for all fields to ensure data integrity.
+  - Provides real-time feedback to the user after submission.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Utilizes `AuthController` to handle API requests for editing materials.
+  - **Backend API**: Sends the updated material details to the backend.
+  - **`materials_page.dart`**: Calls this dialog to edit material details displayed in the project.
+
+  Notes:
+  - Ensure robust backend validation to complement the frontend validation.
+  - Error messages should be descriptive for better user experience.
+*/
+
 class EditMaterialDialog extends StatefulWidget {
   final String projectId;
   final String materialId;

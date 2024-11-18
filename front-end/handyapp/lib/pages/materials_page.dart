@@ -5,6 +5,29 @@ import 'package:handyapp/dialogs/add_material_dialog.dart';
 import 'package:handyapp/dialogs/delete_material_dialog.dart'; // Import for delete dialog
 import 'package:handyapp/dialogs/edit_material_dialog.dart'; // Import for edit dialog
 
+/*
+  File: materials_page.dart
+  Purpose:
+  - Manages and displays the materials required for each project.
+  - Allows users to add, edit, or delete materials for any specific project.
+
+  Functionality:
+  - Fetches project and material data from the `AuthController` using the `GetX` state management package.
+  - Displays materials in a tabular format, including their name, quantity, value, and total value.
+  - Provides buttons for adding a new material, editing existing materials, or deleting them.
+
+  How It Works:
+  - Projects are listed as cards, and each card contains a table showing the materials tied to the project.
+  - Data updates dynamically using `Obx`, reflecting real-time changes in the state.
+  - Includes a gradient background for visual consistency with the rest of the app.
+
+  Files It Interacts With:
+  - `dependencies.dart`: Supplies the `AuthController` for state management and project data.
+  - `add_material_dialog.dart`: Handles the dialog for adding new materials.
+  - `edit_material_dialog.dart`: Handles the dialog for editing material details.
+  - `delete_material_dialog.dart`: Handles the dialog for deleting materials.
+*/
+
 class MaterialsPage extends StatelessWidget {
   const MaterialsPage({super.key});
 

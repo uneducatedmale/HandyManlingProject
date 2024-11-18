@@ -2,6 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: delete_memo_dialog.dart
+  Purpose:
+  - Provides a dialog for users to confirm the deletion of a project (memo) in the Handyman app.
+  - Handles the deletion process and updates the project list in the app.
+
+  How It Works:
+  - Displays a confirmation dialog with options to either "Delete" or "Cancel."
+  - If confirmed, triggers the `deleteProject` method from `AuthController` to delete the project at the specified index.
+  - Provides real-time feedback, including progress indicators and success/error messages.
+
+  Features:
+  - Prevents accidental deletions by requiring user confirmation.
+  - Automatically updates the project list and scrolls to the bottom if projects remain after deletion.
+  - Uses asynchronous operations to handle backend API calls and ensures a responsive UI.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Uses `AuthController` to handle project deletion.
+  - **Backend API**: Sends the delete request for the specified project.
+  - **`memo_page.dart`**: Calls this dialog for project deletion.
+
+  Notes:
+  - Ensure proper error handling in the backend for deletion requests.
+  - The dialog uses a stateful approach to manage different UI states during the deletion process.
+*/
+
 class DeleteProjectDialog extends StatefulWidget {
   final int index;
   final Function scrollToBottom;
