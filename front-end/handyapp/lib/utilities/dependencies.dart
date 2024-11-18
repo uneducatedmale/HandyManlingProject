@@ -6,13 +6,20 @@ import 'base_url.dart';
 class AuthController extends GetxController {
   final createAccountUrl = Uri.parse('$baseUrl/api/users/create-account');
   final signInUrl = Uri.parse('$baseUrl/api/users/sign-in');
-  final addMemoUrl = Uri.parse('$baseUrl/api/users/add-memo');
-  final deleteMemoUrl = Uri.parse('$baseUrl/api/users/delete-memo');
+  final addProjectUrl = Uri.parse('$baseUrl/api/users/add-project');
+  final deleteProjectUrl = Uri.parse('$baseUrl/api/users/delete-project');
+  final addMaterialUrl = Uri.parse('$baseUrl/api/users/add-material');
+  final deleteMaterialUrl = Uri.parse('$baseUrl/api/users/delete-material'); // Endpoint for deleting material
+  final editMaterialUrl = Uri.parse('$baseUrl/api/users/edit-material'); // Endpoint for editing material
+  final addLaborerUrl = Uri.parse('$baseUrl/api/users/add-laborer');
+  final deleteLaborerUrl = Uri.parse('$baseUrl/api/users/delete-laborer'); // Endpoint for deleting laborer
+  final editLaborerUrl = Uri.parse('$baseUrl/api/users/edit-laborer'); // Endpoint for editing laborer
+  final updateProjectPayUrl = Uri.parse('$baseUrl/api/users/update-pay'); // Endpoint for updating pay
 
   RxBool isSignedIn = false.obs;
   RxString token = ''.obs;
   RxString signedInEmail = ''.obs;
-  RxList memos = [].obs;
+  RxList projects = [].obs;
 
   Future<String> createAccount(
     String firstName,
@@ -61,8 +68,8 @@ class AuthController extends GetxController {
         isSignedIn.value = true;
         token.value = jsonSignInData['token'];
         signedInEmail.value = jsonSignInData['email'];
-        memos.clear();
-        memos.addAll(jsonSignInData['memos']);
+        projects.clear();
+        projects.addAll(jsonSignInData['projects']);
         return 'success';
       } else {
         return signInData.body.toString();
@@ -72,65 +79,311 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<String> addMemo(String content) async {
+  Future<String> addProject(String name, String memo) async {
     try {
-      var addMemoData = await http.post(
-        addMemoUrl,
+      var addProjectData = await http.post(
+        addProjectUrl,
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token.value,
         },
-        body: jsonEncode(
-          {
-            'content': content,
-          },
-        ),
+        body: jsonEncode({
+          'name': name,
+          'memo': memo,
+        }),
       );
-      if (addMemoData.statusCode == 200) {
-        final jsonAddMemoData = jsonDecode(addMemoData.body);
-        memos.clear();
-        memos.addAll(jsonAddMemoData);
+      if (addProjectData.statusCode == 200) {
+        final jsonAddProjectData = jsonDecode(addProjectData.body);
+        projects.clear();
+        projects.addAll(jsonAddProjectData);
         return 'success';
       } else {
-        return addMemoData.body;
+        return addProjectData.body;
       }
     } catch (error) {
       return '$error';
     }
   }
 
-  Future<String> deleteMemo(int index) async {
+  Future<String> deleteProject(int index) async {
     try {
-      var deleteMemoData = await http.post(
-        deleteMemoUrl,
+      var deleteProjectData = await http.post(
+        deleteProjectUrl,
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token.value,
         },
-        body: jsonEncode(
-          {
-            'index': index,
-          },
-        ),
+        body: jsonEncode({
+          'index': index,
+        }),
       );
-      if (deleteMemoData.statusCode == 200) {
-        final jsonDeleteMemoData = jsonDecode(deleteMemoData.body);
-        memos.clear();
-        if (jsonDeleteMemoData.isNotEmpty) {
-          memos.addAll(jsonDeleteMemoData);
+      if (deleteProjectData.statusCode == 200) {
+        final jsonDeleteProjectData = jsonDecode(deleteProjectData.body);
+        projects.clear();
+        if (jsonDeleteProjectData.isNotEmpty) {
+          projects.addAll(jsonDeleteProjectData);
         }
         return 'success';
       } else {
-        return deleteMemoData.body.toString();
+        return deleteProjectData.body.toString();
       }
     } catch (error) {
       return error.toString();
     }
   }
 
+  Future<String> editProjectMemo(int index, String name, String memo) async {
+  try {
+    var response = await http.post(
+      Uri.parse('$baseUrl/api/users/edit-memo'), // Backend endpoint for editing
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token.value,
+      },
+      body: jsonEncode({
+        'index': index,
+        'name': name,
+        'memo': memo,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final updatedProjects = jsonDecode(response.body);
+      projects.clear();
+      projects.addAll(updatedProjects);
+      return 'success';
+    } else {
+      return response.body;
+    }
+  } catch (error) {
+    return error.toString();
+  }
+}
+
+
+  Future<String> addMaterial(String projectId, String name, int quantity, double value) async {
+    try {
+      var response = await http.post(
+        addMaterialUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token.value,
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'name': name,
+          'quantity': quantity,
+          'value': value,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedProjects = jsonDecode(response.body);
+        projects.clear();
+        projects.addAll(updatedProjects);
+        return 'success';
+      } else {
+        return response.body;
+      }
+    } catch (error) {
+      return '$error';
+    }
+  }
+
+  Future<String> deleteMaterial(String projectId, String materialId) async {
+    try {
+      var response = await http.post(
+        deleteMaterialUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token.value,
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'materialId': materialId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedProjects = jsonDecode(response.body);
+        projects.clear();
+        projects.addAll(updatedProjects);
+        return 'success';
+      } else {
+        return response.body;
+      }
+    } catch (error) {
+      return '$error';
+    }
+  }
+
+  Future<String> editMaterial(
+    String projectId,
+    String materialId,
+    String name,
+    int quantity,
+    double value,
+  ) async {
+    try {
+      var response = await http.post(
+        editMaterialUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token.value,
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'materialId': materialId,
+          'name': name,
+          'quantity': quantity,
+          'value': value,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedProjects = jsonDecode(response.body);
+        projects.clear();
+        projects.addAll(updatedProjects);
+        return 'success';
+      } else {
+        return response.body;
+      }
+    } catch (error) {
+      return '$error';
+    }
+  }
+
+  Future<String> addLaborer(
+    String projectId,
+    String name,
+    String job,
+    double hourlyWage,
+    int hoursWorked,
+  ) async {
+    try {
+      var response = await http.post(
+        addLaborerUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token.value,
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'name': name,
+          'job': job,
+          'hourlyWage': hourlyWage,
+          'hoursWorked': hoursWorked,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedProjects = jsonDecode(response.body);
+        projects.clear();
+        projects.addAll(updatedProjects);
+        return 'success';
+      } else {
+        return response.body;
+      }
+    } catch (error) {
+      return '$error';
+    }
+  }
+
+  Future<String> deleteLaborer(String projectId, String laborerId) async {
+    try {
+      var response = await http.post(
+        deleteLaborerUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token.value,
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'laborerId': laborerId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedProjects = jsonDecode(response.body);
+        projects.clear();
+        projects.addAll(updatedProjects);
+        return 'success';
+      } else {
+        return response.body;
+      }
+    } catch (error) {
+      return '$error';
+    }
+  }
+
+  Future<String> editLaborer(
+    String projectId,
+    String laborerId,
+    String name,
+    String job,
+    double hourlyWage,
+    int hoursWorked,
+  ) async {
+    try {
+      var response = await http.post(
+        editLaborerUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token.value,
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'laborerId': laborerId,
+          'name': name,
+          'job': job,
+          'hourlyWage': hourlyWage,
+          'hoursWorked': hoursWorked,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedProjects = jsonDecode(response.body);
+        projects.clear();
+        projects.addAll(updatedProjects);
+        return 'success';
+      } else {
+        return response.body;
+      }
+    } catch (error) {
+      return '$error';
+    }
+  }
+
+  Future<String> updateProjectPay(String projectId, double jobPay) async {
+    try {
+      var response = await http.post(
+        updateProjectPayUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token.value,
+        },
+        body: jsonEncode({
+          'projectId': projectId,
+          'jobPay': jobPay,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final updatedProjects = jsonDecode(response.body);
+        projects.clear();
+        projects.addAll(updatedProjects);
+        return 'success';
+      } else {
+        return response.body;
+      }
+    } catch (error) {
+      return '$error';
+    }
+  }
+
   void signOut() {
     Get.offNamed('/home_page');
-    memos.clear();
+    projects.clear();
     token.value = '';
     isSignedIn.value = false;
   }

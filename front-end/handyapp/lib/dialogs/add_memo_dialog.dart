@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
-class AddMemoDialog extends StatefulWidget {
+class AddProjectDialog extends StatefulWidget {
   final Function scrollToBottom;
-  const AddMemoDialog({
+
+  const AddProjectDialog({
     required this.scrollToBottom,
     super.key,
   });
 
   @override
-  State<AddMemoDialog> createState() => _AddMemoDialogState();
+  State<AddProjectDialog> createState() => _AddProjectDialogState();
 }
 
-class _AddMemoDialogState extends State<AddMemoDialog> {
-  RxString status = 'type-memo'.obs;
+class _AddProjectDialogState extends State<AddProjectDialog> {
+  RxString status = 'type-project'.obs;
+  var nameController = TextEditingController();
   var memoController = TextEditingController();
 
-  Widget typeMemoWidget() {
+  Widget typeProjectWidget() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -25,9 +27,20 @@ class _AddMemoDialogState extends State<AddMemoDialog> {
           SizedBox(
             width: 400,
             child: TextFormField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                hintText: 'Enter project name...',
+              ),
+              maxLines: 1,
+            ),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: 400,
+            child: TextFormField(
               controller: memoController,
               decoration: const InputDecoration(
-                hintText: 'Type something...',
+                hintText: 'Type a general memo for this project...',
               ),
               maxLines: null,
             ),
@@ -39,7 +52,7 @@ class _AddMemoDialogState extends State<AddMemoDialog> {
               ElevatedButton(
                 child: const Text('Save'),
                 onPressed: () {
-                  status.value = 'adding-memo';
+                  status.value = 'adding-project';
                 },
               ),
               const SizedBox(width: 20),
@@ -56,9 +69,10 @@ class _AddMemoDialogState extends State<AddMemoDialog> {
     );
   }
 
-  Widget addingMemoWidget() {
+  Widget addingProjectWidget() {
     return FutureBuilder(
-      future: Get.find<dependencies.AuthController>().addMemo(
+      future: Get.find<dependencies.AuthController>().addProject(
+        nameController.text,
         memoController.text,
       ),
       builder: (context, snapshot) {
@@ -67,7 +81,7 @@ class _AddMemoDialogState extends State<AddMemoDialog> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Adding memo'),
+                Text('Adding project...'),
                 SizedBox(height: 20),
                 CircularProgressIndicator(),
               ],
@@ -85,7 +99,7 @@ class _AddMemoDialogState extends State<AddMemoDialog> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Memo added successfully'),
+                Text('Project added successfully'),
                 SizedBox(height: 20),
                 CircularProgressIndicator(),
               ],
@@ -116,10 +130,10 @@ class _AddMemoDialogState extends State<AddMemoDialog> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
-        () => status.value == 'type-memo'
-            ? typeMemoWidget()
-            : status.value == 'adding-memo'
-                ? addingMemoWidget()
+        () => status.value == 'type-project'
+            ? typeProjectWidget()
+            : status.value == 'adding-project'
+                ? addingProjectWidget()
                 : const SizedBox(),
       ),
     );

@@ -3,17 +3,21 @@ import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 import 'package:handyapp/dialogs/add_memo_dialog.dart';
 import 'package:handyapp/dialogs/delete_memo_dialog.dart';
+import 'package:handyapp/dialogs/edit_memo_dialog.dart'; // Import for edit memo dialog
 import 'package:handyapp/dialogs/sign_out_dialog.dart';
 import 'package:intl/intl.dart';
 
 class MemoCard extends StatelessWidget {
   final String timeStamp;
-  final String content;
+  final String name;
+  final String memo;
   final int index;
   final Function scrollToBottom;
+
   const MemoCard({
     required this.timeStamp,
-    required this.content,
+    required this.name,
+    required this.memo,
     required this.index,
     required this.scrollToBottom,
     super.key,
@@ -34,20 +38,35 @@ class MemoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  DateFormat.yMEd().add_jm().format(
-                        DateTime.parse(timeStamp).add(
-                          const Duration(hours: 3),
-                        ),
-                      ),
+                  timeStamp.isNotEmpty
+                      ? DateFormat.yMEd().add_jm().format(
+                        (DateTime.tryParse(timeStamp)?.toLocal()) ?? DateTime.now(),
+                      )
+                      : 'Unknown Date',
                 ),
                 const SizedBox(width: 30),
                 IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.edit, color: Colors.blue), // Blue edit button
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return DeleteMemoDialog(
+                        return EditMemoDialog(
+                          index: index,
+                          currentMemo: memo, // Pass current memo content to edit
+                          projectName: name, // Pass current project name
+                        );
+                      },
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red), // Red delete button
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return DeleteProjectDialog(
                           index: index,
                           scrollToBottom: scrollToBottom,
                         );
@@ -58,7 +77,17 @@ class MemoCard extends StatelessWidget {
               ],
             ),
             const Divider(),
-            Text(content),
+            // Display project name directly
+            Text(
+              name,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(memo),
           ],
         ),
       ),
@@ -74,9 +103,8 @@ class MemoPage extends StatefulWidget {
 }
 
 class _MemoPageState extends State<MemoPage> {
-  var memoController = TextEditingController();
-  RxString status = 'type-memo'.obs;
   var scrollController = ScrollController();
+
   void scrollToBottom() {
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
@@ -88,7 +116,7 @@ class _MemoPageState extends State<MemoPage> {
         if (!Get.find<dependencies.AuthController>().isSignedIn.value) {
           Get.toNamed('/home_page');
         }
-        if (Get.find<dependencies.AuthController>().memos.isNotEmpty) {
+        if (Get.find<dependencies.AuthController>().projects.isNotEmpty) {
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
         }
       },
@@ -97,12 +125,6 @@ class _MemoPageState extends State<MemoPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.toNamed('/memo_page'); // Navigate back to memo page
-          },
-        ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -174,9 +196,9 @@ class _MemoPageState extends State<MemoPage> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
               child: Obx(
-                () => Get.find<dependencies.AuthController>().memos.isEmpty
+                () => Get.find<dependencies.AuthController>().projects.isEmpty
                     ? const Center(
-                        child: Text('No memos yet'),
+                        child: Text('No projects yet'),
                       )
                     : ListView.builder(
                         controller: scrollController,
@@ -185,14 +207,15 @@ class _MemoPageState extends State<MemoPage> {
                           bottom: 130,
                         ),
                         itemCount: Get.find<dependencies.AuthController>()
-                            .memos
+                            .projects
                             .length,
                         itemBuilder: (context, index) {
+                          final project = Get.find<dependencies.AuthController>()
+                              .projects[index];
                           return MemoCard(
-                            timeStamp: Get.find<dependencies.AuthController>()
-                                .memos[index]['timeStamp'],
-                            content: Get.find<dependencies.AuthController>()
-                                .memos[index]['content'],
+                            timeStamp: project['timeStamp'] ?? 'Unknown Date', // No fallback to current date
+                            name: project['name'],
+                            memo: project['memo'],
                             index: index,
                             scrollToBottom: scrollToBottom,
                           );
@@ -212,10 +235,10 @@ class _MemoPageState extends State<MemoPage> {
         ),
         child: IconButton(
           style: const ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(
+            backgroundColor: MaterialStatePropertyAll(
               Colors.white,
             ),
-            foregroundColor: WidgetStatePropertyAll(
+            foregroundColor: MaterialStatePropertyAll(
               Colors.black,
             ),
           ),
@@ -227,7 +250,7 @@ class _MemoPageState extends State<MemoPage> {
             showDialog(
               context: context,
               builder: (context) {
-                return AddMemoDialog(
+                return AddProjectDialog(
                   scrollToBottom: scrollToBottom,
                 );
               },

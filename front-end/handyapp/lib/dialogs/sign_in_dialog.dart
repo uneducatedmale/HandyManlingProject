@@ -28,7 +28,7 @@ class _SignInDialogState extends State<SignInDialog> {
         ),
         const SizedBox(height: 50),
         Text(
-          'Sign In to Memo Account',
+          'Sign In to Handyman Account',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 50),
