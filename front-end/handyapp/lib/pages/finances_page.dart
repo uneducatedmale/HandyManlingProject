@@ -3,6 +3,27 @@ import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 import 'package:handyapp/dialogs/add_pay_dialog.dart'; // Import added
 
+/*
+  File: finances_page.dart
+  Purpose:
+  - Displays a financial breakdown of each project, including materials cost, wages, project pay, and gross income.
+  - Allows users to view financial details and edit the project pay if needed.
+
+  Functionality:
+  - Fetches project data from the `AuthController` using the `GetX` state management package.
+  - Dynamically calculates material costs, wages, and gross income for each project.
+  - Provides an option to edit project pay via the `AddPayDialog`.
+
+  How It Works:
+  - Projects are displayed as a list of cards, with each card showing financial details.
+  - Data is retrieved using `Obx`, ensuring real-time updates when the project data changes.
+  - The UI includes a radial gradient background for visual consistency with other app pages.
+
+  Files It Interacts With:
+  - `dependencies.dart`: Provides the `AuthController` for state management and project data.
+  - `add_pay_dialog.dart`: Handles the dialog for editing project pay.
+*/
+
 class FinancesPage extends StatelessWidget {
   const FinancesPage({super.key});
 

@@ -2,6 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: add_memo_dialog.dart
+  Purpose:
+  - Provides a user interface for adding a new project with a memo.
+  - Captures project details such as name and a general memo.
+
+  How It Works:
+  - Displays a form with input fields for project name and memo.
+  - Validates input to ensure the project name is provided.
+  - Uses the `AuthController` to send project details to the backend via the `addProject` method.
+  - Provides feedback on success or failure:
+    - Success: Adds the project to the list, scrolls to the bottom, and closes the dialog.
+    - Failure: Displays the error message.
+
+  Features:
+  - Integration with the backend through the `AuthController`.
+  - Handles both loading state and response after project creation.
+  - Automatically updates the project list on success.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Accesses the `AuthController` for API communication.
+  - **`memo_page.dart`**: Updates the project list dynamically after a new project is added.
+
+  Notes:
+  - Ensure the backend API for project creation is properly set up.
+  - Provides seamless integration with the app's project management functionality.
+*/
+
 class AddProjectDialog extends StatefulWidget {
   final Function scrollToBottom;
 

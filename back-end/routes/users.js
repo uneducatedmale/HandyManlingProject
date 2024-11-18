@@ -1,3 +1,39 @@
+/*
+  File: users.js
+  Purpose:
+  - Provides backend API routes for user-related operations, including account creation, authentication, and project management.
+  
+  Functionality:
+  - **Account Management**:
+    - Create Account (`/create-account`): Validates user details, hashes passwords, and stores new user data in MongoDB.
+    - Sign In (`/sign-in`): Authenticates users via email and password, and generates a JSON Web Token (JWT).
+  - **Project Management**:
+    - Add Project (`/add-project`): Adds a new project to a user's account, complete with a timestamp.
+    - Edit Project (`/edit-project`): Updates project details like name and memo.
+    - Delete Project (`/delete-project`): Removes a project from a user's account.
+  - **Material Management**:
+    - Add Material (`/add-material`): Adds materials to a project with quantity and value.
+    - Edit Material (`/edit-material`): Updates material details.
+    - Delete Material (`/delete-material`): Removes a material from a project.
+  - **Laborer Management**:
+    - Add Laborer (`/add-laborer`): Adds a laborer to a project with job details, hourly wage, and hours worked.
+    - Edit Laborer (`/edit-laborer`): Updates laborer details.
+    - Delete Laborer (`/delete-laborer`): Removes a laborer from a project.
+  - **Project Financial Management**:
+    - Update Pay (`/update-pay`): Sets the job payment for a project.
+
+  How It Works:
+  - Uses `express` for routing and `Joi` for request validation.
+  - Includes `auth` middleware to ensure routes requiring authentication are secure.
+  - Interacts with the MongoDB database via the `User` model to store and retrieve user and project data.
+
+  Files It Interacts With:
+  - `auth.js`: Middleware for route protection using JWT.
+  - `models/user.js`: MongoDB schema and model for users and their projects.
+  - `db.js`: Ensures database connectivity.
+  - `config.js`: Verifies the presence of `JWT_PRIVATE_KEY` for secure authentication.
+*/
+
 const express = require('express');
 const router = express.Router();
 const { User, validateUser } = require('../models/user');
@@ -97,39 +133,57 @@ router.post('/add-project', auth, async (req, res) => {
 
 
 
-// Edit memo route
-function validateEditMemo(body) {
+// Edit memo route using index
+function validateEditMemoByIndex(body) {
     const schema = Joi.object({
-        index: Joi.number().integer().min(0).required(),
+        index: Joi.number().integer().min(0).required(), // Expect index for identifying the project
         name: Joi.string().required(),
         memo: Joi.string().required(),
     });
     return schema.validate(body);
 }
 
-router.post('/edit-project', auth, async (req, res) => {
+router.post('/edit-memo', auth, async (req, res) => {
     try {
-        const { error } = validateEditProject(req.body);
-        if (error) return res.status(400).send('Invalid edit-project request: ' + error.details[0].message);
+        // Validate the incoming request
+        const { error } = validateEditMemoByIndex(req.body);
+        if (error) {
+            return res.status(400).send(`Invalid edit-memo request: ${error.details[0].message}`);
+        }
 
+        // Find the user making the request
         const user = await User.findById(req.user._id);
-        if (!user) return res.status(401).send('Not authorized to perform this function');
+        if (!user) {
+            return res.status(401).send('Not authorized to perform this function');
+        }
 
-        const project = user.projects.id(req.body.projectId);
-        if (!project) return res.status(404).send('Project not found');
+        // Check if the index is valid
+        if (req.body.index >= user.projects.length) {
+            return res.status(400).send('Invalid project index');
+        }
 
-        // Update only the fields that should be editable
+        // Locate the project by index
+        const project = user.projects[req.body.index];
+        if (!project) {
+            return res.status(404).send('Project not found');
+        }
+
+        // Update the project fields
         project.name = req.body.name;
         project.memo = req.body.memo;
-        // Do not update timeStamp here
 
+        // Save changes to the database
         await user.save();
+
+        // Send back updated projects
         res.send(user.projects);
     } catch (err) {
         console.error('Error editing project:', err.message);
         res.status(500).send('An error occurred while editing the project');
     }
 });
+
+
 
 // Delete project
 function validateDeleteProjectRequest(body) {
@@ -392,7 +446,7 @@ router.post('/delete-laborer', auth, async (req, res) => {
 function validatePay(body) {
     const schema = Joi.object({
         projectId: Joi.string().required(),
-        jobPay: Joi.number().required(),
+        jobPay: Joi.number().min(0).required(), // Allow 0 or greater values
     });
     return schema.validate(body);
 }

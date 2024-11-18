@@ -2,6 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: edit_laborer_dialog.dart
+  Purpose:
+  - Provides a dialog for editing laborer details within a specific project in the Handyman app.
+  - Allows users to update laborer information such as name, job, hourly wage, and hours worked.
+
+  How It Works:
+  - Pre-populates the fields with the current laborer details using `TextEditingController`.
+  - Users can modify the details and save the changes, which triggers the `editLaborer` method from `AuthController`.
+  - Sends the updated data to the backend via an API call and provides real-time feedback.
+
+  Features:
+  - Pre-filled fields for easy editing.
+  - Validates numeric input for wage and hours.
+  - Displays success or error notifications after saving.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Uses `AuthController` to handle laborer editing.
+  - **Backend API**: Sends the update request for laborer data.
+  - **`labor_page.dart`**: Calls this dialog to update laborer details within a project.
+
+  Notes:
+  - Ensure proper error handling in the backend for update requests.
+  - Validate user input thoroughly to prevent invalid data submission.
+*/
+
 class EditLaborerDialog extends StatefulWidget {
   final String projectId;
   final String laborerId;

@@ -7,6 +7,33 @@ import 'package:handyapp/dialogs/edit_memo_dialog.dart'; // Import for edit memo
 import 'package:handyapp/dialogs/sign_out_dialog.dart';
 import 'package:intl/intl.dart';
 
+/*
+  File: memo_page.dart
+  Purpose:
+  - Displays a list of projects with their associated memos and creation timestamps.
+  - Allows users to create, edit, or delete projects and their memos.
+
+  Functionality:
+  - Fetches project data from the `AuthController` using the `GetX` state management package.
+  - Displays project memos with creation dates in card format.
+  - Supports adding a new project via the `AddProjectDialog`.
+  - Enables editing project details via the `EditMemoDialog`.
+  - Provides deletion functionality for projects using the `DeleteProjectDialog`.
+
+  How It Works:
+  - Project data is dynamically updated using `Obx` to observe state changes.
+  - A timestamp is shown in local time for each project and remains static post-creation.
+  - Navigation to other pages (Finances, Materials, Labor) is available via icons in the app bar.
+  - Includes a gradient background for visual consistency with the rest of the app.
+
+  Files It Interacts With:
+  - `dependencies.dart`: Supplies the `AuthController` for state management and project data.
+  - `add_memo_dialog.dart`: Handles the creation of new projects and their memos.
+  - `edit_memo_dialog.dart`: Handles the editing of project details and memos.
+  - `delete_memo_dialog.dart`: Handles the deletion of projects.
+  - `sign_out_dialog.dart`: Provides sign-out functionality from the app.
+*/
+
 class MemoCard extends StatelessWidget {
   final String timeStamp;
   final String name;

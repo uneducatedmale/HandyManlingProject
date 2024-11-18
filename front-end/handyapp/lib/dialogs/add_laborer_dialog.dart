@@ -2,6 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:handyapp/utilities/dependencies.dart' as dependencies;
 
+/*
+  File: add_laborer_dialog.dart
+  Purpose:
+  - Provides a user interface for adding a laborer to a specific project.
+  - Collects and validates input data for the laborer (name, job, hourly wage, hours worked).
+
+  How It Works:
+  - Displays an `AlertDialog` with text fields for the user's input.
+  - Validates the input:
+    - All fields must be filled.
+    - Hourly wage and hours worked must be positive numbers.
+  - Sends the input data to the `AuthController` via the `addLaborer` method.
+  - Provides user feedback:
+    - Displays a snackbar on success or error.
+    - Closes the dialog upon successful addition.
+
+  Features:
+  - Integration with the project's controller for dynamic updates.
+  - Input validation to ensure data integrity.
+  - Realtime error handling and feedback via `Get.snackbar`.
+
+  Files It Interacts With:
+  - **`dependencies.dart`**: Fetches the `AuthController` to handle backend communication.
+  - **`labor_page.dart`**: Updates the labor list dynamically after adding a laborer.
+
+  Notes:
+  - Designed for use within the labor management functionality.
+  - Ensure backend API handles laborer addition appropriately.
+*/
+
 class AddLaborerDialog extends StatefulWidget {
   final String projectId;
   final String projectName;

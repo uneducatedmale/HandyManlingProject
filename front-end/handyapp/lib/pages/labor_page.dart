@@ -5,6 +5,29 @@ import 'package:handyapp/dialogs/add_laborer_dialog.dart';
 import 'package:handyapp/dialogs/edit_laborer_dialog.dart';
 import 'package:handyapp/dialogs/delete_laborer_dialog.dart';
 
+/*
+  File: labor_page.dart
+  Purpose:
+  - Displays and manages the labor details for each project.
+  - Allows users to add, edit, or delete laborers associated with a project.
+
+  Functionality:
+  - Fetches project and labor data from the `AuthController` using the `GetX` state management package.
+  - Presents laborers in a tabular format, including their name, job, hourly wage, hours worked, and total pay.
+  - Provides buttons for adding a new laborer, editing existing laborers, or deleting them.
+
+  How It Works:
+  - Projects are listed as cards, and each card contains a table showing the laborers tied to the project.
+  - Data updates dynamically using `Obx`, reflecting real-time changes in the state.
+  - Background gradient and other UI elements maintain visual consistency with the rest of the app.
+
+  Files It Interacts With:
+  - `dependencies.dart`: Supplies the `AuthController` for state management and project data.
+  - `add_laborer_dialog.dart`: Handles the dialog for adding new laborers.
+  - `edit_laborer_dialog.dart`: Handles the dialog for editing laborer details.
+  - `delete_laborer_dialog.dart`: Handles the dialog for deleting laborers.
+*/
+
 class LaborPage extends StatelessWidget {
   const LaborPage({super.key});
 
